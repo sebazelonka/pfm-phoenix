@@ -18,8 +18,8 @@ defmodule PfmPhoenixWeb.ExpenseController do
     case Expenses.create_expense(expense_params) do
       {:ok, expense} ->
         conn
-        |> put_flash(:info, "Expense created successfully.")
-        |> redirect(to: ~p"/expenses/#{expense}")
+        |> put_flash(:info, "Expense created successfully. #{expense.category}")
+        |> redirect(to: ~p"/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
