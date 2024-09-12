@@ -85,6 +85,7 @@ defmodule PfmPhoenixWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import PfmPhoenixWeb.CoreComponents
+      import PfmPhoenixWeb.CustomComponents
       import PfmPhoenixWeb.Gettext
 
       # Shortcut for generating JS commands
