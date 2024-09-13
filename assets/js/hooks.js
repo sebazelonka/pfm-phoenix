@@ -1,10 +1,10 @@
-import Chart from "chart.js/auto";
-
 export let hooks = {};
 hooks.ChartJS = {
   mounted() {
-    const ctx = this.el;
-    const data = {
+    const ctx = this.el.getContext("2d");
+    console.log(ctx);
+
+    const config = {
       type: "pie",
       data: {
         // random data to validate chart generation
@@ -13,6 +13,6 @@ hooks.ChartJS = {
       },
     };
 
-    new Chart(ctx, data);
+    new Chart(ctx, config);
   },
 };
