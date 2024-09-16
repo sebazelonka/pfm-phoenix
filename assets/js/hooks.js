@@ -2,22 +2,16 @@ export let hooks = {};
 hooks.ChartJS = {
   mounted() {
     const ctx = this.el.getContext("2d");
-    const dataValues = this.el.dataset.graphValues.split(",");
-    // .map((elem) => parseInt(elem, 10));
 
-    const dataCategories = this.el.dataset.graphCategories.split(",");
-    // const dataGraph = this.el.dataset.graphData.split(",");
+    // Parse the JSON string into an object
+    const graphData = JSON.parse(this.el.dataset.graph);
 
-    // console.log(dataGraph);
-
-    console.log(dataValues);
-
+    // Use graphData to render your chart with Chart.js
     const config = {
       type: "pie",
       data: {
-        // random data to validate chart generation
-        labels: dataCategories,
-        datasets: [{ data: dataValues }],
+        labels: graphData.map((item) => item.label),
+        datasets: [{ data: graphData.map((item) => item.value) }],
       },
     };
 
