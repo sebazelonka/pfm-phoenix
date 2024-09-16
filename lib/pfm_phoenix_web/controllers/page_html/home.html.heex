@@ -1,7 +1,7 @@
-<div class="grid grid-cols-2">
-  <%!-- <.flash_group flash={@flash} /> --%>
+<div class="grid md:gap-16 md:grid-cols-[1fr_3fr]">
   <div>
     <h2 class="text-2xl">chart</h2>
+    <.customChart graph={@data} />
   </div>
   <div>
     <h2 class="text-2xl">Last five expenses</h2>

@@ -19,6 +19,7 @@ defmodule PfmPhoenixWeb.Router do
 
     get "/", PageController, :home
     resources "/expenses", ExpenseController
+    resources "/categories", CategoryController
   end
 
   # Other scopes may use custom stacks.

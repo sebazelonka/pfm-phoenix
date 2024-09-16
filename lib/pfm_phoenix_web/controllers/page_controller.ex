@@ -3,20 +3,38 @@ defmodule PfmPhoenixWeb.PageController do
   alias PfmPhoenix.Expenses
 
   def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
+    expenses = Expenses.list_expenses()
 
     # Get the 5 most recent expenses
-    expenses =
-      Expenses.list_expenses()
+    table =
+      expenses
+      # get amount from each expense
+      # |> Enum.map(fn expenses -> expenses.amount end)
       |> Enum.reverse()
       |> Enum.take(5)
 
-    render(conn, :home, expenses: expenses)
+    # generate an array the sum of the amounts per category
+    data =
+      expenses
+      # Group by category
+      |> Enum.group_by(fn expense -> expense.category end)
+      |> Enum.map(fn {category, items} ->
+        total_amount =
+          items
+          |> Enum.reduce(0, fn item, acc ->
+            # Convert the Decimal to float and sum the amounts
+            amount = Decimal.to_float(item.amount)
+            acc + amount
+          end)
+
+        # Convert the total_amount to a string (binaries) with two decimal places
+        %{label: category, value: total_amount}
+      end)
+      |> Jason.encode!()
+
+    render(conn, :home,
+      expenses: table,
+      data: data
+    )
   end
-
-  # def index(conn, _params) do
-
-  #   render(conn, :index, )
-  # end
 end

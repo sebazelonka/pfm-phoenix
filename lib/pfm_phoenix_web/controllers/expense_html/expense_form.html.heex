@@ -4,7 +4,24 @@
   </.error>
   <.input field={f[:amount]} type="number" label="Amount" step="any" />
   <.input field={f[:description]} type="text" label="Description" />
-  <.input field={f[:category]} type="text" label="Category" />
+  <%!-- <.input field={f[:category]} type="text" label="Category" /> --%>
+  <.input
+    field={f[:category]}
+    type="select"
+    label="Category"
+    options={[
+      {"Auto", "auto"},
+      {"Casa", "casa"},
+      {"Servicios", "servicios"},
+      {"Salidas", "salidas"},
+      {"Entretenimiento", "entretenimiento"},
+      {"Bienestar", "bienestar"},
+      {"Educación", "educacion"},
+      {"Supermercado", "supermercado"},
+      {"Tarjetas", "tarjetas"},
+      {"Otros", "otros"}
+    ]}
+  />
   <.input field={f[:date]} type="date" label="Date" />
   <:actions>
     <.button>Save Expense</.button>
