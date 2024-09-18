@@ -6,9 +6,23 @@
       </a>
       <a href="/expenses">Expenses</a>
       <a href="/categories">Categories</a>
+      <a href="/expenses/new">Add expense</a>
     </div>
     <div>
-      <a href="/expenses/new">Add expense</a>
+      <%= if Pow.Plug.current_user(@conn) do %>
+        <%= @current_user.email %>
+
+        <.link :if={Pow.Plug.current_user(@conn)} href={~p"/session"} method="delete">
+          Sign out
+        </.link>
+      <% else %>
+        <.link :if={is_nil(Pow.Plug.current_user(@conn))} navigate={~p"/registration/new"}>
+          Registration
+        </.link>
+        <.link :if={is_nil(Pow.Plug.current_user(@conn))} navigate={~p"/session/new"}>
+          Sign In
+        </.link>
+      <% end %>
     </div>
   </div>
 </header>
