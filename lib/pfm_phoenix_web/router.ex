@@ -15,10 +15,20 @@ defmodule PfmPhoenixWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin do
+    plug PfmPhoenixWeb.EnsureRolePlug, :admin
+  end
+
   scope "/" do
     pipe_through :browser
 
     pow_routes()
+  end
+
+  scope "/" do
+    pipe_through [:browser, :admin]
+
+    get "/users", PfmPhoenixWeb.UserController, :index
   end
 
   scope "/", PfmPhoenixWeb do
@@ -27,6 +37,12 @@ defmodule PfmPhoenixWeb.Router do
     get "/", PageController, :home
     resources "/expenses", ExpenseController
     resources "/categories", CategoryController
+  end
+
+  scope "/admin", PfmPhoenixWeb do
+    pipe_through [:browser, :admin]
+
+    # ...
   end
 
   # Other scopes may use custom stacks.
