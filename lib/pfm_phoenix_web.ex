@@ -43,7 +43,7 @@ defmodule PfmPhoenixWeb do
         layouts: [html: PfmPhoenixWeb.Layouts]
 
       import Plug.Conn
-      import PfmPhoenixWeb.Gettext
+      use Gettext, backend: PfmPhoenixWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -86,7 +86,7 @@ defmodule PfmPhoenixWeb do
       # Core UI components and translation
       import PfmPhoenixWeb.CoreComponents
       import PfmPhoenixWeb.CustomComponents
-      import PfmPhoenixWeb.Gettext
+      use Gettext, backend: PfmPhoenixWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
