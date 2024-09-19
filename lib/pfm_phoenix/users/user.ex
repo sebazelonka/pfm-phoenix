@@ -4,6 +4,7 @@ defmodule PfmPhoenix.Users.User do
 
   schema "users" do
     field :role, :string, default: "user"
+    has_many :expenses, PfmPhoenix.Expenses.Expense
     pow_user_fields()
 
     timestamps()

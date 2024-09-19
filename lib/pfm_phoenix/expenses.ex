@@ -8,17 +8,56 @@ defmodule PfmPhoenix.Expenses do
 
   alias PfmPhoenix.Expenses.Expense
 
+  #  Function to list expenses for a specific user
+  def list_user_expenses(user) do
+    Expense
+    |> where(user_id: ^user.id)
+    |> Repo.all()
+  end
+
+  # Get a specific expense for a user
+
+  def get_user_expense(user, id) do
+    Expense
+    |> where(user_id: ^user.id, id: ^id)
+    |> Repo.one()
+  end
+
   @doc """
-  Returns the list of expenses.
+  Creates a expense.
 
   ## Examples
 
-      iex> list_expenses()
-      [%Expense{}, ...]
+      iex> create_expense(%{field: value})
+      {:ok, %Expense{}}
+
+      iex> create_expense(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
 
   """
-  def list_expenses do
-    Repo.all(Expense)
+  @spec create_expense(
+          any(),
+          :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
+        ) :: any()
+
+  def create_expense(user, attrs \\ %{}) do
+    IO.inspect(user, label: "User in create_expense")
+    IO.inspect(attrs, label: "Attrs in create_expense")
+
+    %Expense{}
+    |> Expense.changeset(Map.put(attrs, "user_id", user.id))
+    # |> Expense.changeset(attrs)
+    # |> Ecto.Changeset.put_change(:user_id, user.id)
+    |> Repo.insert()
+    |> case do
+      {:ok, expense} = result ->
+        IO.inspect(expense, label: "Created Expense")
+        result
+
+      {:error, changeset} = error ->
+        IO.inspect(changeset.errors, label: "Errors in create_expense")
+        error
+    end
   end
 
   @doc """
@@ -36,24 +75,6 @@ defmodule PfmPhoenix.Expenses do
 
   """
   def get_expense!(id), do: Repo.get!(Expense, id)
-
-  @doc """
-  Creates a expense.
-
-  ## Examples
-
-      iex> create_expense(%{field: value})
-      {:ok, %Expense{}}
-
-      iex> create_expense(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_expense(attrs \\ %{}) do
-    %Expense{}
-    |> Expense.changeset(attrs)
-    |> Repo.insert()
-  end
 
   @doc """
   Updates a expense.

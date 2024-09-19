@@ -1,27 +1,22 @@
 <header class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/">
-        <.icon name="hero-home" class="w-6 h-6" />
-      </a>
-      <a href="/expenses">Expenses</a>
-      <a href="/categories">Categories</a>
-      <%= if PfmPhoenix.Users.is_admin?(@current_user) do %>
-        <a href="/users">Users</a>
-      <% end %>
-      <a href="/expenses/new">Add expense</a>
-    </div>
+    <.link href={~p"/"}>
+      <.icon name="hero-home" class="w-6 h-6" />
+    </.link>
+    <%!-- show app navigation only on logged users --%>
+    <%= if @current_user do %>
+      <nav class="flex items-center gap-4 mr-auto px-4">
+        <.link href={~p"/expenses"}>Expenses</.link>
+        <.link href={~p"/categories"}>Categories</.link>
+        <%= if PfmPhoenix.Users.is_admin?(@current_user) do %>
+          <.link href={~p"/users"}>Users</.link>
+        <% end %>
+        <.link href={~p"/expenses/new"}>Add expense</.link>
+      </nav>
+    <% end %>
     <div>
-      <%= if PfmPhoenix.Users.is_admin?(@current_user) do %>
-        <div>
-          <p>You have admin access</p>
-        </div>
-      <% else %>
-        <p>You don't have admin permissions</p>
-      <% end %>
       <%= if Pow.Plug.current_user(@conn) do %>
         <%= @current_user.email %>
-
         <.link :if={Pow.Plug.current_user(@conn)} href={~p"/session"} method="delete">
           Sign out
         </.link>
