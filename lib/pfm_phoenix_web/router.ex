@@ -20,7 +20,8 @@ defmodule PfmPhoenixWeb.Router do
   scope "/", PfmPhoenixWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # dashboard
+    live "/", DashboardLive.Index, :index
 
     # expenses
     live "/expenses", ExpenseLive.Index, :index

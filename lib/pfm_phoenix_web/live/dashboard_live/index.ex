@@ -1,13 +1,15 @@
-defmodule PfmPhoenixWeb.PageController do
-  use PfmPhoenixWeb, :controller
+defmodule PfmPhoenixWeb.DashboardLive.Index do
+  use PfmPhoenixWeb, :live_view
+
   alias PfmPhoenix.Transactions
 
-  def home(conn, _params) do
-    expenses = Transactions.list_expenses()
+  @impl true
+  def mount(_params, _session, socket) do
+    expenses_data = Transactions.list_expenses()
 
     # Get the 5 most recent expenses
-    table =
-      expenses
+    expenses =
+      expenses_data
       # get amount from each expense
       # |> Enum.map(fn expenses -> expenses.amount end)
       |> Enum.sort(&(&1.date >= &2.date))
@@ -15,8 +17,7 @@ defmodule PfmPhoenixWeb.PageController do
 
     # generate an array the sum of the amounts per category
     data =
-      expenses
-      # Group by category
+      expenses_data
       |> Enum.group_by(fn expense -> expense.category end)
       |> Enum.map(fn {category, items} ->
         total_amount =
@@ -27,14 +28,15 @@ defmodule PfmPhoenixWeb.PageController do
             acc + amount
           end)
 
-        # Convert the total_amount to a string (binaries) with two decimal places
-        %{label: category, value: total_amount}
+        # Return a map with the category and total amount
+        %{id: category, label: category, value: total_amount}
       end)
-      |> Jason.encode!()
 
-    render(conn, :home,
-      expenses: table,
-      data: data
-    )
+    socket =
+      socket
+      |> assign(:chart_data, data)
+      |> stream(:expenses, expenses)
+
+    {:ok, socket}
   end
 end
