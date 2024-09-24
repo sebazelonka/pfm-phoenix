@@ -20,5 +20,5 @@ defmodule PfmPhoenixWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :pfm_phoenix
+  use Gettext.Backend, otp_app: :pfm_phoenix
 end
