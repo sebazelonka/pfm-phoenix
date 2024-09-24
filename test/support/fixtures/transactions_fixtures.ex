@@ -20,4 +20,21 @@ defmodule PfmPhoenix.TransactionsFixtures do
 
     expense
   end
+
+  @doc """
+  Generate a income.
+  """
+  def income_fixture(attrs \\ %{}) do
+    {:ok, income} =
+      attrs
+      |> Enum.into(%{
+        amount: "120.5",
+        category: "some category",
+        date: ~D[2024-09-22],
+        description: "some description"
+      })
+      |> PfmPhoenix.Transactions.create_income()
+
+    income
+  end
 end

@@ -21,14 +21,22 @@ defmodule PfmPhoenixWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    # expenses
     live "/expenses", ExpenseLive.Index, :index
     live "/expenses/new", ExpenseLive.Index, :new
     live "/expenses/:id/edit", ExpenseLive.Index, :edit
 
     live "/expenses/:id", ExpenseLive.Show, :show
     live "/expenses/:id/show/edit", ExpenseLive.Show, :edit
-    # resources "/expenses", ExpenseController
-    resources "/categories", CategoryController
+
+    # incomes
+    live "/incomes", IncomeLive.Index, :index
+    live "/incomes/new", IncomeLive.Index, :new
+    live "/incomes/:id/edit", IncomeLive.Index, :edit
+
+    live "/incomes/:id", IncomeLive.Show, :show
+    live "/incomes/:id/show/edit", IncomeLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

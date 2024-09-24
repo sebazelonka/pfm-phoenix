@@ -1,16 +1,16 @@
 defmodule PfmPhoenixWeb.PageController do
   use PfmPhoenixWeb, :controller
-  alias PfmPhoenix.Expenses
+  alias PfmPhoenix.Transactions
 
   def home(conn, _params) do
-    expenses = Expenses.list_expenses()
+    expenses = Transactions.list_expenses()
 
     # Get the 5 most recent expenses
     table =
       expenses
       # get amount from each expense
       # |> Enum.map(fn expenses -> expenses.amount end)
-      |> Enum.reverse()
+      |> Enum.sort(&(&1.date >= &2.date))
       |> Enum.take(5)
 
     # generate an array the sum of the amounts per category
