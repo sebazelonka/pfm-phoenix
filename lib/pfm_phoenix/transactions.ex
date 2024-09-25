@@ -122,8 +122,10 @@ defmodule PfmPhoenix.Transactions do
       [%Income{}, ...]
 
   """
-  def list_incomes do
-    Repo.all(Income)
+  def list_incomes(user) do
+    Income
+    |> where(user_id: ^user.id)
+    |> Repo.all()
   end
 
   @doc """
@@ -154,9 +156,13 @@ defmodule PfmPhoenix.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_income(attrs \\ %{}) do
+  def create_income(attrs \\ %{}, user) do
+    attrs = Map.put(attrs, "user_id", user.id)
+    IO.inspect(attrs, label: "attrs")
+
     %Income{}
     |> Income.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 

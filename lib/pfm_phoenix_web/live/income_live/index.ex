@@ -4,9 +4,12 @@ defmodule PfmPhoenixWeb.IncomeLive.Index do
   alias PfmPhoenix.Transactions
   alias PfmPhoenix.Transactions.Income
 
+  on_mount {PfmPhoenixWeb.UserAuth, :ensure_authenticated}
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :incomes, Transactions.list_incomes())}
+    IO.inspect(socket.assigns.current_user, label: "current_user")
+    {:ok, stream(socket, :incomes, Transactions.list_incomes(socket.assigns.current_user))}
   end
 
   @impl true
@@ -23,7 +26,7 @@ defmodule PfmPhoenixWeb.IncomeLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Income")
-    |> assign(:income, %Income{})
+    |> assign(:income, %Income{user_id: socket.assigns.current_user.id})
   end
 
   defp apply_action(socket, :index, _params) do

@@ -32,13 +32,17 @@ defmodule PfmPhoenixWeb.IncomeLive.FormComponent do
   end
 
   @impl true
-  def update(%{income: income} = assigns, socket) do
+  # def update(%{income: income, current_user: current_user} = assigns, socket) do
+  def update(%{income: income, current_user: current_user} = assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Transactions.change_income(income))
-     end)}
+     |> assign(:current_user, current_user)
+     |> assign_form(Transactions.change_income(income))}
+
+    #  |> assign_new(:form, fn ->
+    #    to_form(Transactions.change_income(income))
+    #  end)}
   end
 
   @impl true
@@ -49,6 +53,10 @@ defmodule PfmPhoenixWeb.IncomeLive.FormComponent do
 
   def handle_event("save", %{"income" => income_params}, socket) do
     save_income(socket, socket.assigns.action, income_params)
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 
   defp save_income(socket, :edit, income_params) do
@@ -67,7 +75,7 @@ defmodule PfmPhoenixWeb.IncomeLive.FormComponent do
   end
 
   defp save_income(socket, :new, income_params) do
-    case Transactions.create_income(income_params) do
+    case create_income(income_params, socket.assigns.current_user) do
       {:ok, income} ->
         notify_parent({:saved, income})
 
@@ -79,6 +87,10 @@ defmodule PfmPhoenixWeb.IncomeLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
     end
+  end
+
+  defp create_income(params, user) do
+    Transactions.create_income(params, user)
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
