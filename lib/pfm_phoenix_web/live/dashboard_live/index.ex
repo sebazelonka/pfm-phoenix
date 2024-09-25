@@ -3,9 +3,11 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
 
   alias PfmPhoenix.Transactions
 
+  on_mount {PfmPhoenixWeb.UserAuth, :ensure_authenticated}
+
   @impl true
   def mount(_params, _session, socket) do
-    expenses_data = Transactions.list_expenses()
+    expenses_data = Transactions.list_expenses(socket.assigns.current_user)
 
     # Get the 5 most recent expenses
     expenses =
@@ -34,6 +36,7 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
 
     socket =
       socket
+      |> assign(:current_user, socket.assigns.current_user)
       |> assign(:chart_data, data)
       |> stream(:expenses, expenses)
 
