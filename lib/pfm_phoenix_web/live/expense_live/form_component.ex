@@ -32,13 +32,12 @@ defmodule PfmPhoenixWeb.ExpenseLive.FormComponent do
   end
 
   @impl true
-  def update(%{expense: expense} = assigns, socket) do
+  def update(%{expense: expense, current_user: current_user} = assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Transactions.change_expense(expense))
-     end)}
+     |> assign(:current_user, current_user)
+     |> assign_form(Transactions.change_expense(expense))}
   end
 
   @impl true
@@ -49,6 +48,10 @@ defmodule PfmPhoenixWeb.ExpenseLive.FormComponent do
 
   def handle_event("save", %{"expense" => expense_params}, socket) do
     save_expense(socket, socket.assigns.action, expense_params)
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 
   defp save_expense(socket, :edit, expense_params) do
@@ -67,7 +70,7 @@ defmodule PfmPhoenixWeb.ExpenseLive.FormComponent do
   end
 
   defp save_expense(socket, :new, expense_params) do
-    case Transactions.create_expense(expense_params) do
+    case create_expense(expense_params, socket.assigns.current_user) do
       {:ok, expense} ->
         notify_parent({:saved, expense})
 
@@ -79,6 +82,10 @@ defmodule PfmPhoenixWeb.ExpenseLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
     end
+  end
+
+  defp create_expense(params, user) do
+    Transactions.create_expense(params, user)
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

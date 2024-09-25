@@ -4,9 +4,14 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
   alias PfmPhoenix.Transactions
   alias PfmPhoenix.Transactions.Expense
 
+  on_mount {PfmPhoenixWeb.UserAuth, :ensure_authenticated}
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :expenses, Transactions.list_expenses())}
+    {:ok,
+     socket
+     |> assign(:current_user, socket.assigns.current_user)
+     |> stream(:expenses, Transactions.list_expenses(socket.assigns.current_user))}
   end
 
   @impl true
@@ -23,7 +28,7 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Expense")
-    |> assign(:expense, %Expense{})
+    |> assign(:expense, %Expense{user_id: socket.assigns.current_user.id})
   end
 
   defp apply_action(socket, :index, _params) do

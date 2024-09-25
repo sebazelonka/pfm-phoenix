@@ -17,8 +17,11 @@ defmodule PfmPhoenix.Transactions do
       [%Expense{}, ...]
 
   """
-  def list_expenses do
-    Repo.all(Expense)
+
+  def list_expenses(user) do
+    Expense
+    |> where(user_id: ^user.id)
+    |> Repo.all()
   end
 
   @doc """
@@ -49,9 +52,15 @@ defmodule PfmPhoenix.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_expense(attrs \\ %{}) do
+
+  def create_expense(attrs \\ %{}, user) do
+    attrs = Map.put(attrs, "user_id", user.id)
+
+    IO.inspect(attrs, label: "attrs")
+
     %Expense{}
     |> Expense.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
