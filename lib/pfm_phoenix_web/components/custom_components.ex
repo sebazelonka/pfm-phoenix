@@ -5,7 +5,8 @@ defmodule PfmPhoenixWeb.CustomComponents do
   def customChart(assigns) do
     ~H"""
     <div class="flex flex-col items-center justify-center w-full">
-      <canvas id="myChart" phx-hook="ChartJS" class="w-96 h-96" data-graph={@graph}></canvas>
+      <canvas id="myChart" phx-hook="ChartJS" class="w-96 h-96" data-graph={Jason.encode!(@graph)}>
+      </canvas>
     </div>
     """
   end
