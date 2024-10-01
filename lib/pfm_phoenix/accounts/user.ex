@@ -1,6 +1,12 @@
 defmodule PfmPhoenix.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import EctoEnum
+
+  defenum(RolesEnum, :role, [
+    :user,
+    :admin
+  ])
 
   schema "users" do
     field :email, :string
@@ -8,7 +14,8 @@ defmodule PfmPhoenix.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
-    has_many :expenses, PfmPhoenix.Expenses.Expense
+    field :role, RolesEnum, default: :user
+    has_many :expenses, PfmPhoenix.Transactions.Expense
 
     timestamps(type: :utc_datetime)
   end
@@ -158,5 +165,18 @@ defmodule PfmPhoenix.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @doc """
+  A user changeset for registering admins.
+  """
+  def admin_registration_changeset(user, attrs) do
+    user
+    |> registration_changeset(attrs)
+    |> Ecto.Changeset.prepare_changes(fn changeset -> set_admin_role(changeset) end)
+  end
+
+  defp set_admin_role(changeset) do
+    Ecto.Changeset.put_change(changeset, :role, :admin)
   end
 end
