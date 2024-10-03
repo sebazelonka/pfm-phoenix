@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :pfm_phoenix, PfmPhoenix.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "dev_phoenix",
+  password: "dev_password_1234",
   hostname: "localhost",
-  database: "pfm_phoenix_dev",
+  database: "phoenix_db_local",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

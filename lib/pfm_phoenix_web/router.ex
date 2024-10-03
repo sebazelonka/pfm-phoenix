@@ -2,6 +2,7 @@ defmodule PfmPhoenixWeb.Router do
   use PfmPhoenixWeb, :router
 
   import PfmPhoenixWeb.UserAuth
+  import PfmPhoenixWeb.UserAdmin
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,12 +14,20 @@ defmodule PfmPhoenixWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :admin do
+    plug :ensure_user_is_admin
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
   scope "/", PfmPhoenixWeb do
     pipe_through :browser
+  end
+
+  scope("/", PfmPhoenixWeb) do
+    pipe_through [:browser, :require_authenticated_user]
 
     # dashboard
     live "/", DashboardLive.Index, :index
@@ -38,6 +47,13 @@ defmodule PfmPhoenixWeb.Router do
 
     live "/incomes/:id", IncomeLive.Show, :show
     live "/incomes/:id/show/edit", IncomeLive.Show, :edit
+  end
+
+  # app admin
+  scope "/", PfmPhoenixWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin]
+
+    live "/users", UsersLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

@@ -81,6 +81,24 @@ defmodule PfmPhoenix.Accounts do
   end
 
   @doc """
+  Registers an admin user.
+
+  ## Examples
+
+      iex> register_admin_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> register_admin_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def register_admin_user(attrs) do
+    %User{}
+    |> User.admin_registration_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.
 
   ## Examples
@@ -349,5 +367,10 @@ defmodule PfmPhoenix.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  def list_users() do
+    User
+    |> Repo.all()
   end
 end
