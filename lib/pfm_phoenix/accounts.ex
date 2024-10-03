@@ -368,4 +368,9 @@ defmodule PfmPhoenix.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def list_users() do
+    User
+    |> Repo.all()
+  end
 end
