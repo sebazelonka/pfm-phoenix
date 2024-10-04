@@ -2,7 +2,6 @@ defmodule PfmPhoenixWeb.Router do
   use PfmPhoenixWeb, :router
 
   import PfmPhoenixWeb.UserAuth
-  import PfmPhoenixWeb.UserAdmin
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -14,9 +13,9 @@ defmodule PfmPhoenixWeb.Router do
     plug :fetch_current_user
   end
 
-  pipeline :admin do
-    plug :ensure_user_is_admin
-  end
+  # pipeline :admin do
+  #   plug :ensure_user_is_admin
+  # end
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -51,7 +50,7 @@ defmodule PfmPhoenixWeb.Router do
 
   # app admin
   scope "/", PfmPhoenixWeb do
-    pipe_through [:browser, :require_authenticated_user, :admin]
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/users", UsersLive.Index, :index
   end
