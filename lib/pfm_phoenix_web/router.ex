@@ -46,6 +46,14 @@ defmodule PfmPhoenixWeb.Router do
 
     live "/incomes/:id", IncomeLive.Show, :show
     live "/incomes/:id/show/edit", IncomeLive.Show, :edit
+
+    # budgets
+    live "/budgets", BudgetLive.Index, :index
+    live "/budgets/new", BudgetLive.Index, :new
+    live "/budgets/:id/edit", BudgetLive.Index, :edit
+
+    live "/budgets/:id", BudgetLive.Show, :show
+    live "/budgets/:id/show/edit", BudgetLive.Show, :edit
   end
 
   # app admin
