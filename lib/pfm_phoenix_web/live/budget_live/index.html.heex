@@ -30,13 +30,19 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="budget-modal" show on_cancel={JS.patch(~p"/budgets")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="budget-modal"
+  show
+  on_cancel={JS.patch(~p"/budgets")}
+>
   <.live_component
     module={PfmPhoenixWeb.BudgetLive.FormComponent}
     id={@budget.id || :new}
     title={@page_title}
     action={@live_action}
     budget={@budget}
+    user={@current_user}
     patch={~p"/budgets"}
   />
 </.modal>

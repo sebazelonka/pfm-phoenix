@@ -65,7 +65,9 @@ defmodule PfmPhoenixWeb.BudgetLive.FormComponent do
   end
 
   defp save_budget(socket, :new, budget_params) do
-    case Finance.create_budget(budget_params) do
+    user = socket.assigns.user
+
+    case Finance.create_budget(budget_params, user) do
       {:ok, budget} ->
         notify_parent({:saved, budget})
 

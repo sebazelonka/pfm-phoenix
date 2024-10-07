@@ -14,7 +14,7 @@ defmodule PfmPhoenix.Finance.Budget do
   @doc false
   def changeset(budget, attrs) do
     budget
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(attrs, [:name, :description, :user_id])
+    |> validate_required([:name, :description, :user_id])
   end
 end

@@ -52,7 +52,9 @@ defmodule PfmPhoenix.Finance do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_budget(attrs \\ %{}) do
+  def create_budget(attrs \\ %{}, user) do
+    attrs = Map.put(attrs, "user_id", user.id)
+
     %Budget{}
     |> Budget.changeset(attrs)
     |> Repo.insert()
