@@ -23,6 +23,12 @@ defmodule PfmPhoenixWeb.ExpenseLive.FormComponent do
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:date]} type="date" label="Date" />
         <.input field={@form[:category]} type="text" label="Category" />
+        <.input
+          field={@form[:budget_id]}
+          type="select"
+          label="Select budget"
+          options={Enum.map(@budgets, &{&1.name, &1.id})}
+        />
         <:actions>
           <.button phx-disable-with="Saving...">Save Expense</.button>
         </:actions>

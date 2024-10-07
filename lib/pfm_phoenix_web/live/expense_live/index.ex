@@ -1,6 +1,7 @@
 defmodule PfmPhoenixWeb.ExpenseLive.Index do
   use PfmPhoenixWeb, :live_view
 
+  alias PfmPhoenix.Finance
   alias PfmPhoenix.Transactions
   alias PfmPhoenix.Transactions.Expense
 
@@ -11,6 +12,7 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
     {:ok,
      socket
      |> assign(:current_user, socket.assigns.current_user)
+     |> assign(:budget, Finance.list_budgets(socket.assigns.current_user))
      |> stream(:expenses, Transactions.list_expenses(socket.assigns.current_user))}
   end
 
@@ -23,12 +25,14 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
     socket
     |> assign(:page_title, "Edit Expense")
     |> assign(:expense, Transactions.get_expense!(id))
+    |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Expense")
     |> assign(:expense, %Expense{user_id: socket.assigns.current_user.id})
+    |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
   end
 
   defp apply_action(socket, :index, _params) do
