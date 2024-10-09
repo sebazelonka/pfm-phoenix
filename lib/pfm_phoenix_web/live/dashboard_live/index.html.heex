@@ -5,8 +5,18 @@
   </div>
   <div>
     <h2 class="text-2xl">Last five transactions</h2>
-    <.table id="latest-transactions" rows={@streams.transactions}>
-      <:col :let={{_id, transactions}} label="Amount"><%= transactions.amount %></:col>
+    <.table id="latest-transactions" rows={@streams.transactions_table}>
+      <:col :let={{_id, transactions}} label="Amount">
+        <%= if transactions.type == :income do %>
+          <span class="text-green-600">
+            $ <%= transactions.amount %>
+          </span>
+        <% else %>
+          <span class="text-red-600">
+            -$<%= transactions.amount %>
+          </span>
+        <% end %>
+      </:col>
       <:col :let={{_id, transactions}} label="Description"><%= transactions.description %></:col>
       <:col :let={{_id, transactions}} label="Category"><%= transactions.category %></:col>
       <:col :let={{_id, transactions}} label="Date"><%= transactions.date %></:col>

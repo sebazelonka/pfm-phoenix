@@ -9,15 +9,19 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     transactions = Transactions.list_transactions(socket.assigns.current_user)
 
+    IO.inspect(transactions, label: "transactions")
+
     # Get the 5 most recent transactions
-    transactions =
+    transactions_table =
       transactions
       |> Enum.sort(&(&1.date >= &2.date))
       |> Enum.take(5)
 
-    # generate an array the sum of the amounts per category for the chart
-    data =
+    # generate an array the sum of the expenses amount per category for the chart
+    chart_data =
       transactions
+      # Remove income transactions
+      |> Enum.filter(fn transaction -> transaction.type != :income end)
       |> Enum.group_by(fn transaction -> transaction.category end)
       |> Enum.map(fn {category, items} ->
         total_amount =
@@ -35,8 +39,8 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
     socket =
       socket
       |> assign(:current_user, socket.assigns.current_user)
-      |> assign(:chart_data, data)
-      |> stream(:transactions, transactions)
+      |> assign(:chart_data, chart_data)
+      |> stream(:transactions_table, transactions_table)
 
     {:ok, socket}
   end
