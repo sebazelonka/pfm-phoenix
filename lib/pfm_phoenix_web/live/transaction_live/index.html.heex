@@ -7,11 +7,7 @@
   </:actions>
 </.header>
 
-<.table
-  id="transactions"
-  rows={@streams.transactions}
-  row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
->
+<.table id="transactions" rows={@streams.transactions}>
   <:col :let={{_id, transaction}} label="Amount">
     <%= if transaction.type == :income do %>
       <span class="text-green-600">
