@@ -1,9 +1,9 @@
-defmodule PfmPhoenixWeb.ExpenseLive.Index do
+defmodule PfmPhoenixWeb.TransactionLive.Index do
   use PfmPhoenixWeb, :live_view
 
   alias PfmPhoenix.Finance
   alias PfmPhoenix.Transactions
-  alias PfmPhoenix.Transactions.Expense
+  alias PfmPhoenix.Transactions.Transaction
 
   on_mount {PfmPhoenixWeb.UserAuth, :ensure_authenticated}
 
@@ -13,7 +13,7 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
      socket
      |> assign(:current_user, socket.assigns.current_user)
      |> assign(:budget, Finance.list_budgets(socket.assigns.current_user))
-     |> stream(:expenses, Transactions.list_expenses(socket.assigns.current_user))}
+     |> stream(:transactions, Transactions.list_transactions(socket.assigns.current_user))}
   end
 
   @impl true
@@ -23,34 +23,36 @@ defmodule PfmPhoenixWeb.ExpenseLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Expense")
-    |> assign(:expense, Transactions.get_expense!(id))
+    |> assign(:page_title, "Edit Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
+    |> assign(:transaction, Transactions.get_transaction!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Expense")
-    |> assign(:expense, %Expense{user_id: socket.assigns.current_user.id})
+    |> assign(:page_title, "New Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
+    |> assign(:transaction, %Transaction{user_id: socket.assigns.current_user.id})
+
+    # |> assign(:transaction, %Transaction{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Expenses")
-    |> assign(:expense, nil)
+    |> assign(:page_title, "Listing Transactions")
+    |> assign(:transaction, nil)
   end
 
   @impl true
-  def handle_info({PfmPhoenixWeb.ExpenseLive.FormComponent, {:saved, expense}}, socket) do
-    {:noreply, stream_insert(socket, :expenses, expense)}
+  def handle_info({PfmPhoenixWeb.TransactionLive.FormComponent, {:saved, transaction}}, socket) do
+    {:noreply, stream_insert(socket, :transactions, transaction)}
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    expense = Transactions.get_expense!(id)
-    {:ok, _} = Transactions.delete_expense(expense)
+    transaction = Transactions.get_transaction!(id)
+    {:ok, _} = Transactions.delete_transaction(transaction)
 
-    {:noreply, stream_delete(socket, :expenses, expense)}
+    {:noreply, stream_delete(socket, :transactions, transaction)}
   end
 end

@@ -6,210 +6,104 @@ defmodule PfmPhoenix.Transactions do
   import Ecto.Query, warn: false
   alias PfmPhoenix.Repo
 
-  alias PfmPhoenix.Transactions.Expense
+  alias PfmPhoenix.Transactions.Transaction
 
   @doc """
-  Returns the list of expenses.
+  Returns the list of transactions.
 
   ## Examples
 
-      iex> list_expenses()
-      [%Expense{}, ...]
+      iex> list_transactions()
+      [%Transaction{}, ...]
 
   """
-
-  def list_expenses(user) do
-    Expense
+  def list_transactions(user) do
+    Transaction
     |> where(user_id: ^user.id)
     |> Repo.all()
   end
 
   @doc """
-  Gets a single expense.
+  Gets a single transaction.
 
-  Raises `Ecto.NoResultsError` if the Expense does not exist.
+  Raises `Ecto.NoResultsError` if the Transaction does not exist.
 
   ## Examples
 
-      iex> get_expense!(123)
-      %Expense{}
+      iex> get_transaction!(123)
+      %Transaction{}
 
-      iex> get_expense!(456)
+      iex> get_transaction!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_expense!(id), do: Repo.get!(Expense, id)
+  def get_transaction!(id), do: Repo.get!(Transaction, id)
 
   @doc """
-  Creates a expense.
+  Creates a transaction.
 
   ## Examples
 
-      iex> create_expense(%{field: value})
-      {:ok, %Expense{}}
+      iex> create_transaction(%{field: value})
+      {:ok, %Transaction{}}
 
-      iex> create_expense(%{field: bad_value})
+      iex> create_transaction(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-
-  def create_expense(attrs \\ %{}, user) do
+  def create_transaction(attrs \\ %{}, user) do
     attrs = Map.put(attrs, "user_id", user.id)
 
-    IO.inspect(attrs, label: "attrs")
-
-    %Expense{}
-    |> Expense.changeset(attrs)
+    %Transaction{}
+    |> Transaction.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a expense.
+  Updates a transaction.
 
   ## Examples
 
-      iex> update_expense(expense, %{field: new_value})
-      {:ok, %Expense{}}
+      iex> update_transaction(transaction, %{field: new_value})
+      {:ok, %Transaction{}}
 
-      iex> update_expense(expense, %{field: bad_value})
+      iex> update_transaction(transaction, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_expense(%Expense{} = expense, attrs) do
-    expense
-    |> Expense.changeset(attrs)
+  def update_transaction(%Transaction{} = transaction, attrs) do
+    transaction
+    |> Transaction.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a expense.
+  Deletes a transaction.
 
   ## Examples
 
-      iex> delete_expense(expense)
-      {:ok, %Expense{}}
+      iex> delete_transaction(transaction)
+      {:ok, %Transaction{}}
 
-      iex> delete_expense(expense)
+      iex> delete_transaction(transaction)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_expense(%Expense{} = expense) do
-    Repo.delete(expense)
+  def delete_transaction(%Transaction{} = transaction) do
+    Repo.delete(transaction)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking expense changes.
+  Returns an `%Ecto.Changeset{}` for tracking transaction changes.
 
   ## Examples
 
-      iex> change_expense(expense)
-      %Ecto.Changeset{data: %Expense{}}
+      iex> change_transaction(transaction)
+      %Ecto.Changeset{data: %Transaction{}}
 
   """
-  def change_expense(%Expense{} = expense, attrs \\ %{}) do
-    Expense.changeset(expense, attrs)
-  end
-
-  alias PfmPhoenix.Transactions.Income
-
-  @doc """
-  Returns the list of incomes.
-
-  ## Examples
-
-      iex> list_incomes()
-      [%Income{}, ...]
-
-  """
-  def list_incomes(user) do
-    Income
-    |> where(user_id: ^user.id)
-    |> Repo.all()
-  end
-
-  @doc """
-  Gets a single income.
-
-  Raises `Ecto.NoResultsError` if the Income does not exist.
-
-  ## Examples
-
-      iex> get_income!(123)
-      %Income{}
-
-      iex> get_income!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_income!(id), do: Repo.get!(Income, id)
-
-  @doc """
-  Creates a income.
-
-  ## Examples
-
-      iex> create_income(%{field: value})
-      {:ok, %Income{}}
-
-      iex> create_income(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_income(attrs \\ %{}, user) do
-    attrs = Map.put(attrs, "user_id", user.id)
-    IO.inspect(attrs, label: "attrs")
-
-    %Income{}
-    |> Income.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:user, user)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a income.
-
-  ## Examples
-
-      iex> update_income(income, %{field: new_value})
-      {:ok, %Income{}}
-
-      iex> update_income(income, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_income(%Income{} = income, attrs) do
-    income
-    |> Income.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a income.
-
-  ## Examples
-
-      iex> delete_income(income)
-      {:ok, %Income{}}
-
-      iex> delete_income(income)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_income(%Income{} = income) do
-    Repo.delete(income)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking income changes.
-
-  ## Examples
-
-      iex> change_income(income)
-      %Ecto.Changeset{data: %Income{}}
-
-  """
-  def change_income(%Income{} = income, attrs \\ %{}) do
-    Income.changeset(income, attrs)
+  def change_transaction(%Transaction{} = transaction, attrs \\ %{}) do
+    Transaction.changeset(transaction, attrs)
   end
 end

@@ -31,21 +31,13 @@ defmodule PfmPhoenixWeb.Router do
     # dashboard
     live "/", DashboardLive.Index, :index
 
-    # expenses
-    live "/expenses", ExpenseLive.Index, :index
-    live "/expenses/new", ExpenseLive.Index, :new
-    live "/expenses/:id/edit", ExpenseLive.Index, :edit
+    # transactions
+    live "/transactions", TransactionLive.Index, :index
+    live "/transactions/new", TransactionLive.Index, :new
+    live "/transactions/:id/edit", TransactionLive.Index, :edit
 
-    live "/expenses/:id", ExpenseLive.Show, :show
-    live "/expenses/:id/show/edit", ExpenseLive.Show, :edit
-
-    # incomes
-    live "/incomes", IncomeLive.Index, :index
-    live "/incomes/new", IncomeLive.Index, :new
-    live "/incomes/:id/edit", IncomeLive.Index, :edit
-
-    live "/incomes/:id", IncomeLive.Show, :show
-    live "/incomes/:id/show/edit", IncomeLive.Show, :edit
+    live "/transactions/:id", TransactionLive.Show, :show
+    live "/transactions/:id/show/edit", TransactionLive.Show, :edit
 
     # budgets
     live "/budgets", BudgetLive.Index, :index

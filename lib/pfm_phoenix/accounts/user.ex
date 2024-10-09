@@ -15,7 +15,8 @@ defmodule PfmPhoenix.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
     field :role, RolesEnum, default: :user
-    has_many :expenses, PfmPhoenix.Transactions.Expense
+    has_many :transactions, PfmPhoenix.Transactions.Transaction
+    has_many :budgets, PfmPhoenix.Finance.Budget
 
     timestamps(type: :utc_datetime)
   end

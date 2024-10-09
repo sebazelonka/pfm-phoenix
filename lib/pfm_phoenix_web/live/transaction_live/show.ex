@@ -1,4 +1,4 @@
-defmodule PfmPhoenixWeb.ExpenseLive.Show do
+defmodule PfmPhoenixWeb.TransactionLive.Show do
   use PfmPhoenixWeb, :live_view
 
   alias PfmPhoenix.Transactions
@@ -13,9 +13,9 @@ defmodule PfmPhoenixWeb.ExpenseLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:expense, Transactions.get_expense!(id))}
+     |> assign(:transaction, Transactions.get_transaction!(id))}
   end
 
-  defp page_title(:show), do: "Show Expense"
-  defp page_title(:edit), do: "Edit Expense"
+  defp page_title(:show), do: "Show Transaction"
+  defp page_title(:edit), do: "Edit Transaction"
 end
