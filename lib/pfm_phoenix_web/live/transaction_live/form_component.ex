@@ -19,11 +19,24 @@ defmodule PfmPhoenixWeb.TransactionLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input
+          field={@form[:type]}
+          type="select"
+          label="Select transaction type"
+          options={["income", "expense"]}
+          prompt="Select transaction type"
+        />
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:date]} type="date" label="Date" />
-        <.input field={@form[:category]} type="text" label="Category" />
-        <.input field={@form[:type]} type="text" label="Type" />
+        <.input
+          field={@form[:category]}
+          type="select"
+          label="Select category"
+          options={["auto", "supermercado", "hobbies", "salidas", "otros", "tarjetas"]}
+          prompt="Select category"
+        />
+
         <.input
           field={@form[:budget_id]}
           type="select"

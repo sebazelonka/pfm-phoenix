@@ -9,10 +9,6 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    budgets = Finance.list_budgets(socket.assigns.current_user)
-
-    IO.inspect(budgets, label: "budgets")
-
     {:ok,
      socket
      |> assign(:current_user, socket.assigns.current_user)

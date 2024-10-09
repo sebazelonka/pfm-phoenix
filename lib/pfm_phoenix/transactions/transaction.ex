@@ -2,11 +2,27 @@ defmodule PfmPhoenix.Transactions.Transaction do
   use Ecto.Schema
   import Ecto.Changeset
 
+  import EctoEnum
+
+  defenum(TransactionType, :type, [
+    :income,
+    :expense
+  ])
+
+  defenum(Categories, :category, [
+    :auto,
+    :supermercado,
+    :hobbies,
+    :salidas,
+    :otros,
+    :tarjetas
+  ])
+
   schema "transactions" do
-    field :type, :string
+    field :type, TransactionType
     field :date, :date
     field :description, :string
-    field :category, :string
+    field :category, Categories
     field :amount, :decimal
     belongs_to :user, PfmPhoenix.Accounts.User
     belongs_to :budget, PfmPhoenix.Finance.Budget
