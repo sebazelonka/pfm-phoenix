@@ -13,7 +13,7 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
      socket
      |> assign(:current_user, socket.assigns.current_user)
      |> assign(:budget, Finance.list_budgets(socket.assigns.current_user))
-     |> stream(:transactions, Transactions.list_transactions())}
+     |> stream(:transactions, Transactions.list_transactions(socket.assigns.current_user))}
   end
 
   @impl true
@@ -24,6 +24,7 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Transaction")
+    |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
     |> assign(:transaction, Transactions.get_transaction!(id))
   end
 

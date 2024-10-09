@@ -6,7 +6,7 @@ defmodule PfmPhoenix.Finance.Budget do
     field :name, :string
     field :description, :string
     field :user_id, :id
-    has_many :expenses, PfmPhoenix.Transactions.Expense
+    has_many :transactions, PfmPhoenix.Transactions.Transaction
 
     timestamps(type: :utc_datetime)
   end
