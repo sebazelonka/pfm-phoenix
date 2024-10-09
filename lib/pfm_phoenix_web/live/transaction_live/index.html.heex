@@ -11,11 +11,13 @@
   <:col :let={{_id, transaction}} label="Amount">
     <%= if transaction.type == :income do %>
       <span class="text-green-600">
-        $ <%= transaction.amount %>
+        <.icon name="hero-arrow-up-right" class="h-4 w-4" />
+        <%= format_currency(transaction.amount) %>
       </span>
     <% else %>
       <span class="text-red-600">
-        -$<%= transaction.amount %>
+        <.icon name="hero-arrow-down-left" class="h-4 w-4" />
+        <%= format_currency(transaction.amount) %>
       </span>
     <% end %>
   </:col>

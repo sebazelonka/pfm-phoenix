@@ -59,7 +59,8 @@ defmodule PfmPhoenix.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
-      {:ecto_enum, "~> 1.4"}
+      {:ecto_enum, "~> 1.4"},
+      {:number, "~> 1.0.1"}
     ]
   end
 
