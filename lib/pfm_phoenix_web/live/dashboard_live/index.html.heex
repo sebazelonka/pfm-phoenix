@@ -23,7 +23,9 @@
       <:col :let={{_id, transactions}} label="Category"><%= transactions.category %></:col>
       <:col :let={{_id, transactions}} label="Date"><%= transactions.date %></:col>
       <:action :let={{_id, transactions}}>
-        <.link navigate={~p"/transactions/#{transactions}/edit"}>View details</.link>
+        <.link navigate={~p"/transactions/#{transactions}/edit"}>
+          <.icon name="hero-pencil-solid" class="h-4 w-4" />
+        </.link>
       </:action>
     </.table>
   </div>
