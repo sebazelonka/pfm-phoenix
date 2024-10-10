@@ -1,5 +1,5 @@
-<header class="">
-  <nav class="flex items-center mx-auto p-4 bg-black text-white relative z-10">
+<header>
+  <nav class="flex items-center mx-auto px-4  bg-black text-white relative z-10 h-14">
     <%= if @current_user do %>
       <.link href={~p"/dashboard"} class="flex items-center gap-1">
         <img src={~p"/images/logo.svg"} class="h-8" />
@@ -13,7 +13,7 @@
     <% end %>
 
     <%= if @current_user do %>
-      <div class="nav-links nav bottom-[100%]">
+      <div class="nav-links nav top-[-1000px]">
         <ul class="flex md:flex-row flex-col md:items-center md:gap-4 gap-8">
           <li>
             <a href={~p"/transactions"}>Transactions</a>
@@ -54,7 +54,7 @@
       <button
         data-collapse-toggle="navbar-user"
         type="button"
-        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:text-gray-100 focus:outline-none   dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
         aria-controls="navbar-user"
         aria-expanded="false"
         onclick="onToggleMenu(this)"
@@ -90,7 +90,7 @@
   const navLinks = document.querySelector('.nav-links')
   function onToggleMenu(e){
     e.name = e.name === 'menu' ? 'close' : 'menu'
-    navLinks.classList.toggle('bottom-[100%]')
-    navLinks.classList.toggle('bottom-[-169px]')
+    navLinks.classList.toggle('top-[-1000px]')
+    navLinks.classList.toggle('top-[57px]')
   }
 </script>
