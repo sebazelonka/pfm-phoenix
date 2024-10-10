@@ -1,59 +1,96 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <nav class="flex items-center gap-4 justify-between">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} class="w-8 h-8" />
-      </a>
-      <a href={~p"/transactions"}>Transactions</a>
-      <a href={~p"/budgets"}>Budgets</a>
-      <%= if @current_user && @current_user.role == :admin do %>
-        <.link href={~p"/users"}>Users</.link>
-      <% end %>
-    </nav>
-    <ul class="flex items-center gap-4 ml-auto">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
-  </div>
+<header class="">
+  <nav class="flex items-center mx-auto p-4 bg-black text-white relative z-10">
+    <%= if @current_user do %>
+      <.link href={~p"/dashboard"} class="flex items-center gap-1">
+        <img src={~p"/images/logo.svg"} class="h-8" />
+        <h1 class="sr-only">Aura</h1>
+      </.link>
+    <% else %>
+      <.link href={~p"/"}>
+        <img src={~p"/images/logo.svg"} class="h-8" />
+        <h1 class="sr-only">Aura</h1>
+      </.link>
+    <% end %>
+
+    <%= if @current_user do %>
+      <div class="nav-links nav bottom-[100%]">
+        <ul class="flex md:flex-row flex-col md:items-center md:gap-4 gap-8">
+          <li>
+            <a href={~p"/transactions"}>Transactions</a>
+          </li>
+          <li>
+            <a href={~p"/budgets"}>Budgets</a>
+          </li>
+          <%= if @current_user && @current_user.role == :admin do %>
+            <li>
+              <.link href={~p"/users"}>Users</.link>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="flex items-center gap-6 ml-auto">
+      <ul class="flex items-center gap-4 ml-auto">
+        <%= if @current_user do %>
+          <li>
+            <.link href={~p"/users/settings"}>
+              <.icon name="hero-user-circle-solid" class="w-6 h-6" />
+              <%= @current_user.email %>
+            </.link>
+          </li>
+        <% else %>
+          <li>
+            <.link href={~p"/users/register"}>
+              Register
+            </.link>
+          </li>
+          <li>
+            <.link href={~p"/users/log_in"}>
+              Log in
+            </.link>
+          </li>
+        <% end %>
+      </ul>
+      <button
+        data-collapse-toggle="navbar-user"
+        type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-user"
+        aria-expanded="false"
+        onclick="onToggleMenu(this)"
+        name="menu"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="w-5 h-5"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 17 14"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15"
+          />
+        </svg>
+      </button>
+    </div>
+  </nav>
 </header>
-<main class="px-4 py-20 sm:px-8 lg:px-16">
+
+<main class="px-4 py-20 sm:px-8 lg:px-16 relative">
   <.flash_group flash={@flash} />
   <%= @inner_content %>
 </main>
+
+<script>
+  const navLinks = document.querySelector('.nav-links')
+  function onToggleMenu(e){
+    e.name = e.name === 'menu' ? 'close' : 'menu'
+    navLinks.classList.toggle('bottom-[100%]')
+    navLinks.classList.toggle('bottom-[-169px]')
+  }
+</script>

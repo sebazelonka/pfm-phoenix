@@ -23,13 +23,15 @@ defmodule PfmPhoenixWeb.Router do
 
   scope "/", PfmPhoenixWeb do
     pipe_through :browser
+
+    live "/", HomeLive.Index, :index
   end
 
   scope("/", PfmPhoenixWeb) do
     pipe_through [:browser, :require_authenticated_user]
 
     # dashboard
-    live "/", DashboardLive.Index, :index
+    live "/dashboard", DashboardLive.Index, :index
 
     # transactions
     live "/transactions", TransactionLive.Index, :index
