@@ -59,11 +59,11 @@
     <%!-- show total balance TODO: improve this --%>
     <%= if @total_income > @total_expenses do %>
       <div class="flex justify-between bg-green-400 p-4 text-2xl">
-        <%= @total_income - @total_expenses %>
+        <%= format_currency(@total_income - @total_expenses) %>
       </div>
     <% else %>
       <div class="flex justify-between bg-red-400 p-4 text-2xl">
-        <%= @total_income - @total_expenses %>
+        <%= format_currency(@total_income - @total_expenses) %>
       </div>
     <% end %>
   </div>
