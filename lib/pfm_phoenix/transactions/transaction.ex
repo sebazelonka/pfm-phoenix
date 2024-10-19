@@ -15,7 +15,10 @@ defmodule PfmPhoenix.Transactions.Transaction do
     :hobbies,
     :salidas,
     :otros,
-    :tarjetas
+    :tarjetas,
+    :familia,
+    :sueldo,
+    :extras
   ])
 
   schema "transactions" do

@@ -29,11 +29,22 @@ defmodule PfmPhoenixWeb.TransactionLive.FormComponent do
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:date]} type="date" label="Date" />
+        <%!-- categories should be dynamic --%>
         <.input
           field={@form[:category]}
           type="select"
           label="Select category"
-          options={["auto", "supermercado", "hobbies", "salidas", "otros", "tarjetas"]}
+          options={[
+            "auto",
+            "supermercado",
+            "hobbies",
+            "salidas",
+            "otros",
+            "tarjetas",
+            "familia",
+            "sueldo",
+            "extras"
+          ]}
           prompt="Select category"
         />
 
