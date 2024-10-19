@@ -39,8 +39,6 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
     |> assign(:page_title, "New Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
     |> assign(:transaction, %Transaction{user_id: socket.assigns.current_user.id})
-
-    # |> assign(:transaction, %Transaction{})
   end
 
   defp apply_action(socket, :index, _params) do

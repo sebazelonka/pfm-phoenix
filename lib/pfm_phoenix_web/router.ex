@@ -32,6 +32,8 @@ defmodule PfmPhoenixWeb.Router do
 
     # dashboard
     live "/dashboard", DashboardLive.Index, :index
+    live "/dashboard/new", DashboardLive.Index, :new
+    live "/dashboard/:id/edit", DashboardLive.Index, :edit
 
     # transactions
     live "/transactions", TransactionLive.Index, :index

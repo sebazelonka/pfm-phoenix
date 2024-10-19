@@ -1,10 +1,19 @@
 <div class="grid md:gap-16 grid-cols-1 md:grid-cols-[1fr_3fr]">
-  <div>
+  <div class="hidden md:block">
     <h2 class="text-2xl">chart</h2>
     <.customChart graph={@chart_data} />
   </div>
   <div>
-    <h2 class="text-2xl">Last five transactions</h2>
+    <div class="flex justify-between">
+      <h2 class="text-2xl">Last five transactions</h2>
+
+      <.link patch={~p"/dashboard/new"}>
+        <.button>
+          <span><.icon name="hero-plus-solid" class="h-4 w-4" /></span>
+          <span>New Transaction</span>
+        </.button>
+      </.link>
+    </div>
     <.table id="latest-transactions" rows={@streams.transactions_table}>
       <:col :let={{_id, transactions}} label="Amount">
         <%= if transactions.type == :income do %>
@@ -23,10 +32,36 @@
       <:col :let={{_id, transactions}} label="Category"><%= transactions.category %></:col>
       <:col :let={{_id, transactions}} label="Date"><%= transactions.date %></:col>
       <:action :let={{_id, transactions}}>
-        <.link navigate={~p"/transactions/#{transactions}/edit"}>
+        <.link patch={~p"/dashboard/#{transactions}/edit"}>
           <.icon name="hero-pencil-solid" class="h-4 w-4" />
+        </.link>
+      </:action>
+      <:action :let={{id, transactions}}>
+        <.link
+          phx-click={JS.push("delete", value: %{id: transactions.id}) |> hide("##{id}")}
+          data-confirm="Are you sure?"
+        >
+          <.icon name="hero-trash-solid" class="h-4 w-4" />
         </.link>
       </:action>
     </.table>
   </div>
 </div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="transaction-modal"
+  show
+  on_cancel={JS.patch(~p"/dashboard")}
+>
+  <.live_component
+    module={PfmPhoenixWeb.TransactionLive.FormComponent}
+    id={@transaction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    transaction={@transaction}
+    budgets={@budgets}
+    current_user={@current_user}
+    patch={~p"/dashboard"}
+  />
+</.modal>
