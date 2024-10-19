@@ -37,12 +37,36 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
         %{id: category, label: category, value: total_amount}
       end)
 
+    # Sum the income amount
+    total_income =
+      transactions
+      |> Enum.filter(fn transaction -> transaction.type == :income end)
+      |> Enum.reduce(0, fn item, acc ->
+        amount = Decimal.to_float(item.amount)
+        acc + amount
+      end)
+
+    # Sum the expenses amount
+    total_expenses =
+      transactions
+      |> Enum.filter(fn transaction -> transaction.type == :expense end)
+      |> Enum.reduce(0, fn item, acc ->
+        amount = Decimal.to_float(item.amount)
+        acc + amount
+      end)
+
+    # Income - Expenses
+    total_balance = total_income - total_expenses
+
     socket =
       socket
       |> assign(:current_user, socket.assigns.current_user)
       |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
       |> assign(:chart_data, chart_data)
       |> stream(:transactions_table, transactions_table)
+      |> assign(:total_income, total_income)
+      |> assign(:total_expenses, total_expenses)
+      |> assign(:total_balance, total_balance)
 
     {:ok, socket}
   end

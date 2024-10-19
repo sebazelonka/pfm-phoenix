@@ -46,6 +46,27 @@
       </:action>
     </.table>
   </div>
+  <div>
+    <%!-- show total income --%>
+    <h2 class="text-2xl">Total income</h2>
+    <div class="flex justify-between bg-green-400 p-4 mb-4 text-2xl">
+      <%= format_currency(@total_income) %>
+    </div>
+    <div class="flex justify-between bg-red-400 p-4 mb-4 text-2xl">
+      <%= format_currency(@total_expenses) %>
+    </div>
+
+    <%!-- show total balance TODO: improve this --%>
+    <%= if @total_income > @total_expenses do %>
+      <div class="flex justify-between bg-green-400 p-4 text-2xl">
+        <%= @total_income - @total_expenses %>
+      </div>
+    <% else %>
+      <div class="flex justify-between bg-red-400 p-4 text-2xl">
+        <%= @total_income - @total_expenses %>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <.modal
