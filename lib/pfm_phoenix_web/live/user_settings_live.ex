@@ -68,6 +68,9 @@ defmodule PfmPhoenixWeb.UserSettingsLive do
             <.button phx-disable-with="Changing...">Change Password</.button>
           </:actions>
         </.simple_form>
+        <.link href={~p"/users/log_out"} method="delete" class="block pt-4">
+          Log out
+        </.link>
       </div>
     </div>
     """

@@ -55,6 +55,7 @@ defmodule PfmPhoenixWeb do
         layout: {PfmPhoenixWeb.Layouts, :app}
 
       unquote(html_helpers())
+      import PfmPhoenixWeb.Helpers
     end
   end
 

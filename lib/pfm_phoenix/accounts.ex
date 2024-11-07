@@ -4,6 +4,7 @@ defmodule PfmPhoenix.Accounts do
   """
 
   import Ecto.Query, warn: false
+  import PfmPhoenix.Finance
   alias PfmPhoenix.Repo
 
   alias PfmPhoenix.Accounts.{User, UserToken, UserNotifier}
@@ -75,9 +76,25 @@ defmodule PfmPhoenix.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+    Repo.transaction(fn ->
+      with {:ok, user} <-
+             %User{}
+             |> User.registration_changeset(attrs)
+             |> Repo.insert(),
+           {:ok, budget} <-
+             create_budget(
+               %{
+                 "name" => "Default",
+                 "description" => "Default budget"
+               },
+               user
+             ) do
+        {user, budget}
+      else
+        {:error, failed_operation} ->
+          Repo.rollback(failed_operation)
+      end
+    end)
   end
 
   @doc """

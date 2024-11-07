@@ -7,38 +7,41 @@
   </:actions>
 </.header>
 
-<.table
-  id="transactions"
-  rows={@streams.transactions}
-  row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
->
+<.table id="transactions" rows={@streams.transactions}>
   <:col :let={{_id, transaction}} label="Amount">
-    <%= if transaction.type == :income do %>
-      <span class="text-green-600">
-        $ <%= transaction.amount %>
-      </span>
-    <% else %>
-      <span class="text-red-600">
-        -$<%= transaction.amount %>
-      </span>
-    <% end %>
+    <div>
+      <%= if transaction.type == :income do %>
+        <span class="text-green-600">
+          <.icon name="hero-arrow-up-right" class="h-4 w-4" />
+          <%= format_currency(transaction.amount) %>
+        </span>
+      <% else %>
+        <span class="text-red-600">
+          <.icon name="hero-arrow-down-left" class="h-4 w-4" />
+          <%= format_currency(transaction.amount) %>
+        </span>
+      <% end %>
+    </div>
   </:col>
   <:col :let={{_id, transaction}} label="Description"><%= transaction.description %></:col>
   <:col :let={{_id, transaction}} label="Date"><%= transaction.date %></:col>
   <:col :let={{_id, transaction}} label="Category"><%= transaction.category %></:col>
   <:col :let={{_id, transaction}} label="Type"><%= transaction.type %></:col>
+
   <:action :let={{_id, transaction}}>
     <div class="sr-only">
       <.link navigate={~p"/transactions/#{transaction}"}>Show</.link>
     </div>
-    <.link patch={~p"/transactions/#{transaction}/edit"}>Edit</.link>
+    <.link patch={~p"/transactions/#{transaction}/edit"}>
+      <.icon name="hero-pencil-solid" class="h-4 w-4" />
+    </.link>
   </:action>
   <:action :let={{id, transaction}}>
     <.link
       phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >
-      Delete
+      <.icon name="hero-trash-solid" class="h-4 w-4" />
     </.link>
   </:action>
 </.table>

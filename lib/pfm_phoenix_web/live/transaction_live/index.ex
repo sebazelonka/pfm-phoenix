@@ -9,11 +9,15 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    transactions = Transactions.list_transactions(socket.assigns.current_user)
+
+    transactions = order_transactions(transactions)
+
     {:ok,
      socket
      |> assign(:current_user, socket.assigns.current_user)
      |> assign(:budget, Finance.list_budgets(socket.assigns.current_user))
-     |> stream(:transactions, Transactions.list_transactions(socket.assigns.current_user))}
+     |> stream(:transactions, transactions)}
   end
 
   @impl true
@@ -33,8 +37,6 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
     |> assign(:page_title, "New Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
     |> assign(:transaction, %Transaction{user_id: socket.assigns.current_user.id})
-
-    # |> assign(:transaction, %Transaction{})
   end
 
   defp apply_action(socket, :index, _params) do
