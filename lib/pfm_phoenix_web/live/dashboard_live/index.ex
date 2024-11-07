@@ -10,13 +10,9 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
   def mount(_params, _session, socket) do
     transactions = Transactions.list_transactions(socket.assigns.current_user)
 
-    # Get the 5 most recent transactions
     transactions_table =
-      transactions
-      |> Enum.sort(fn tx1, tx2 ->
-        {tx1.date, tx1.inserted_at} >= {tx2.date, tx2.inserted_at}
-      end)
-      |> Enum.take(5)
+      order_transactions(transactions)
+      |> Enum.take(10)
 
     # generate an array the sum of the expenses amount per category for the chart
     chart_data =

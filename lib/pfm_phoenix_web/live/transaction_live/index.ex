@@ -9,11 +9,9 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    transactions =
-      Transactions.list_transactions(socket.assigns.current_user)
-      |> Enum.sort(fn tx1, tx2 ->
-        {tx1.date, tx1.inserted_at} >= {tx2.date, tx2.inserted_at}
-      end)
+    transactions = Transactions.list_transactions(socket.assigns.current_user)
+
+    transactions = order_transactions(transactions)
 
     {:ok,
      socket
