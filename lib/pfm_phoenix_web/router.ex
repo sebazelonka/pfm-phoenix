@@ -13,18 +13,8 @@ defmodule PfmPhoenixWeb.Router do
     plug :fetch_current_user
   end
 
-  # pipeline :admin do
-  #   plug :ensure_user_is_admin
-  # end
-
   pipeline :api do
     plug :accepts, ["json"]
-  end
-
-  scope "/", PfmPhoenixWeb do
-    pipe_through :browser
-
-    live "/", HomeLive.Index, :index
   end
 
   scope("/", PfmPhoenixWeb) do
@@ -88,6 +78,7 @@ defmodule PfmPhoenixWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{PfmPhoenixWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/", HomeLive.Index, :index
       live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
