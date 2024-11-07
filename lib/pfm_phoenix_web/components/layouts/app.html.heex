@@ -14,16 +14,18 @@
 
     <%= if @current_user do %>
       <div class="nav-links nav top-[-1000px]">
-        <ul class="flex md:flex-row flex-col md:items-center md:gap-4 gap-8">
+        <ul class="flex flex-col gap-1 grow md:flex-row md:items-center md:gap-4 ">
           <li>
-            <a href={~p"/transactions"}>Transactions</a>
+            <a href={~p"/transactions"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">
+              Transactions
+            </a>
           </li>
           <li>
-            <a href={~p"/budgets"}>Budgets</a>
+            <a href={~p"/budgets"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Budgets</a>
           </li>
           <%= if @current_user && @current_user.role == :admin do %>
             <li>
-              <.link href={~p"/users"}>Users</.link>
+              <.link href={~p"/users"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Users</.link>
             </li>
           <% end %>
         </ul>
