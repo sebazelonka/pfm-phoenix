@@ -20,8 +20,52 @@ defmodule PfmPhoenix.Transactions do
   def list_transactions(user) do
     Transaction
     |> where(user_id: ^user.id)
+    |> order_by([t], desc: t.date)
     |> Repo.all()
   end
+
+  @doc """
+  Returns a filtered list of transactions.
+
+  ## Filters
+  * start_date - Filter transactions by start date
+  * end_date - Filter transactions by end date
+  * type - Filter transactions by type (income/expense)
+  * category - Filter transactions by category
+  """
+  def list_transactions(user, filters) do
+    Transaction
+    |> where(user_id: ^user.id)
+    |> filter_by_date_range(filters)
+    |> filter_by_type(filters)
+    |> filter_by_category(filters)
+    |> order_by([t], desc: t.date)
+    |> Repo.all()
+  end
+
+  defp filter_by_date_range(query, %{start_date: start_date, end_date: end_date}) 
+       when not is_nil(start_date) and not is_nil(end_date) do
+    query |> where([t], t.date >= ^start_date and t.date <= ^end_date)
+  end
+  defp filter_by_date_range(query, %{start_date: start_date}) when not is_nil(start_date) do
+    query |> where([t], t.date >= ^start_date)
+  end
+  defp filter_by_date_range(query, %{end_date: end_date}) when not is_nil(end_date) do
+    query |> where([t], t.date <= ^end_date)
+  end
+  defp filter_by_date_range(query, _), do: query
+
+  defp filter_by_type(query, %{type: type}) when not is_nil(type) and type != "" do
+    type = String.to_existing_atom(type)
+    query |> where([t], t.type == ^type)
+  end
+  defp filter_by_type(query, _), do: query
+
+  defp filter_by_category(query, %{category: category}) when not is_nil(category) and category != "" do
+    category = String.to_existing_atom(category)
+    query |> where([t], t.category == ^category)
+  end
+  defp filter_by_category(query, _), do: query
 
   @doc """
   Gets a single transaction.
