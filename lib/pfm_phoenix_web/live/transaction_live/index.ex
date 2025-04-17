@@ -9,14 +9,24 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    transactions = Transactions.list_transactions(socket.assigns.current_user)
+    # Initialize default filters
+    filters = %{
+      start_date: nil,
+      end_date: nil,
+      type: nil,
+      category: nil
+    }
 
-    transactions = order_transactions(transactions)
+    transactions = Transactions.list_transactions(socket.assigns.current_user)
+    transactions = Enum.sort_by(transactions, & &1.date, :desc)
 
     {:ok,
      socket
      |> assign(:current_user, socket.assigns.current_user)
      |> assign(:budget, Finance.list_budgets(socket.assigns.current_user))
+     |> assign(:filters, filters)
+     |> assign(:transaction_types, [:income, :expense])
+     |> assign(:categories, [:auto, :supermercado, :hobbies, :salidas, :otros, :tarjetas, :familia, :sueldo, :extras])
      |> stream(:transactions, transactions)}
   end
 
@@ -57,4 +67,54 @@ defmodule PfmPhoenixWeb.TransactionLive.Index do
 
     {:noreply, stream_delete(socket, :transactions, transaction)}
   end
+
+  @impl true
+  def handle_event("apply_filters", %{"filters" => filter_params}, socket) do
+    # Parse dates if present
+    filters = %{
+      start_date: parse_date(filter_params["start_date"]),
+      end_date: parse_date(filter_params["end_date"]),
+      type: filter_params["type"],
+      category: filter_params["category"]
+    }
+    
+    # Get filtered transactions
+    transactions = Transactions.list_transactions(socket.assigns.current_user, filters)
+    
+    {:noreply, 
+     socket
+     |> assign(:filters, filters)
+     |> stream(:transactions, transactions, reset: true)}
+  end
+
+  @impl true
+  def handle_event("reset_filters", _params, socket) do
+    # Reset to default filters
+    filters = %{
+      start_date: nil,
+      end_date: nil,
+      type: nil,
+      category: nil
+    }
+    
+    # Get all transactions
+    transactions = Transactions.list_transactions(socket.assigns.current_user)
+    transactions = Enum.sort_by(transactions, & &1.date, :desc)
+    
+    {:noreply, 
+     socket
+     |> assign(:filters, filters)
+     |> stream(:transactions, transactions, reset: true)}
+  end
+
+  defp parse_date(""), do: nil
+  defp parse_date(nil), do: nil
+  defp parse_date(date_string) do
+    case Date.from_iso8601(date_string) do
+      {:ok, date} -> date
+      _ -> nil
+    end
+  end
+
+
 end

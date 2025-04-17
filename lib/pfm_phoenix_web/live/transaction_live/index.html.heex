@@ -7,6 +7,62 @@
   </:actions>
 </.header>
 
+<div class="bg-white shadow-md rounded-lg p-6 my-6">
+  <h3 class="text-lg font-medium mb-4">Filters</h3>
+  <.form for={%{}} id="filter-form" phx-submit="apply_filters">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div>
+        <.input
+          type="date"
+          field={{:filters, :start_date}}
+          name="filters[start_date]"
+          label="Start Date"
+          value={@filters.start_date && Date.to_iso8601(@filters.start_date)}
+        />
+      </div>
+      <div>
+        <.input
+          type="date"
+          field={{:filters, :end_date}}
+          name="filters[end_date]"
+          label="End Date"
+          value={@filters.end_date && Date.to_iso8601(@filters.end_date)}
+        />
+      </div>
+      <div>
+        <.input
+          type="select"
+          field={{:filters, :type}}
+          name="filters[type]"
+          label="Type"
+          prompt="All Types"
+          options={Enum.map(@transaction_types, &{String.capitalize(to_string(&1)), to_string(&1)})}
+          value={@filters.type}
+        />
+      </div>
+      <div>
+        <.input
+          type="select"
+          field={{:filters, :category}}
+          name="filters[category]"
+          label="Category"
+          prompt="All Categories"
+          options={Enum.map(@categories, fn cat -> {String.capitalize(to_string(cat)), to_string(cat)} end)}
+          value={@filters.category}
+        />
+      </div>
+    </div>
+    <div class="mt-4 flex justify-end space-x-2">
+      <.button type="submit" phx-disable-with="Filtering..." class="bg-blue-500 hover:bg-blue-700">
+        Apply Filters
+      </.button>
+      <.button type="button" phx-click="reset_filters" class="bg-gray-300 text-gray-800 hover:bg-gray-400">
+        Reset
+      </.button>
+    </div>
+  </.form>
+</div>
+
 <.table id="transactions" rows={@streams.transactions}>
   <:col :let={{_id, transaction}} label="Amount">
     <div>
