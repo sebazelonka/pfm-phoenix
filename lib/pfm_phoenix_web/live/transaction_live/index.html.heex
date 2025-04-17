@@ -1,3 +1,4 @@
+<div id="transactions-container" phx-hook="TransactionFilters">
 <.header>
   Listing Transactions
   <:actions>
@@ -93,10 +94,7 @@
     </.link>
   </:action>
   <:action :let={{id, transaction}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
+    <.link phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")} data-confirm="Are you sure?">
       <.icon name="hero-trash-solid" class="h-4 w-4" />
     </.link>
   </:action>
@@ -119,3 +117,4 @@
     patch={~p"/transactions"}
   />
 </.modal>
+</div>
