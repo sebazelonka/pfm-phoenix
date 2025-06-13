@@ -19,13 +19,13 @@ alias PfmPhoenix.Transactions.Transaction
 # Create admin user
 {:ok, admin} = Accounts.register_admin_user(%{
   email: "admin@example.com",
-  password: "AdminPassword1234!"
+  password: "new_password_1234"
 })
 
 # Create test user
 {:ok, {user, default_budget}} = Accounts.register_user(%{
   email: "user@example.com",
-  password: "UserPassword1234!"
+  password: "new_password_1234"
 })
 
 # Create additional budgets
@@ -50,26 +50,26 @@ income_categories = [:sueldo, :extras]
 for i <- 1..50 do
   # Determine if this will be an income or expense (30% income, 70% expense)
   type = if :rand.uniform(10) <= 3, do: :income, else: :expense
-  
+
   # Select appropriate categories based on transaction type
   category = case type do
     :income -> Enum.random(income_categories)
     :expense -> Enum.random(expense_categories)
   end
-  
+
   # Generate a random amount (incomes are typically larger)
   amount = case type do
     :income -> :rand.uniform(5000) + 1000
     :expense -> :rand.uniform(1000) + 10
   end
-  
+
   # Generate a random date within the last year
   days_ago = :rand.uniform(365)
   date = Date.add(Date.utc_today(), -days_ago)
-  
+
   # Select a random budget
   budget = Enum.random(budgets)
-  
+
   # Create description based on category and type
   description = case {type, category} do
     {:income, :sueldo} -> "Salario mensual"
@@ -83,7 +83,7 @@ for i <- 1..50 do
     {:expense, :familia} -> "Gasto familiar #{i}"
     _ -> "Transacción #{i}"
   end
-  
+
   # Create the transaction
   {:ok, _transaction} = Transactions.create_transaction(
     %{
@@ -96,11 +96,11 @@ for i <- 1..50 do
     },
     user
   )
-  
+
   # Print progress
   IO.puts("Created transaction #{i}/50: #{type} - #{category} - $#{amount}")
 end
 
 IO.puts("\nSeed data created successfully!")
-IO.puts("Admin user: admin@example.com / AdminPassword1234!")
-IO.puts("Test user: user@example.com / UserPassword1234!")
+IO.puts("Admin user: admin@example.com / new_password_1234")
+IO.puts("Test user: user@example.com / new_password_1234")
