@@ -40,6 +40,17 @@ defmodule PfmPhoenixWeb.Router do
 
     live "/budgets/:id", BudgetLive.Show, :show
     live "/budgets/:id/show/edit", BudgetLive.Show, :edit
+
+    # credit cards
+    live "/credit_cards", CreditCardLive.Index, :index
+    live "/credit_cards/new", CreditCardLive.Index, :new
+    live "/credit_cards/:id/edit", CreditCardLive.Index, :edit
+
+    live "/credit_cards/:id", CreditCardLive.Show, :show
+    live "/credit_cards/:id/show/edit", CreditCardLive.Show, :edit
+
+    # forecast
+    live "/forecast", ForecastLive.Index, :index
   end
 
   # app admin
