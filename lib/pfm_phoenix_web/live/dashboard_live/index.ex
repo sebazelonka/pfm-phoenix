@@ -76,13 +76,15 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
     socket
     |> assign(:page_title, "Edit Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
-    |> assign(:transaction, PfmPhoenix.Transactions.get_transaction!(id))
+    |> assign(:credit_cards, Finance.list_credit_cards(socket.assigns.current_user))
+    |> assign(:transaction, PfmPhoenix.Transactions.get_transaction_for_edit!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Transaction")
     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))
+    |> assign(:credit_cards, Finance.list_credit_cards(socket.assigns.current_user))
     |> assign(:transaction, %PfmPhoenix.Transactions.Transaction{})
   end
 
@@ -101,7 +103,16 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
     updated_transactions =
       transactions
       |> Enum.sort(fn tx1, tx2 ->
-        {tx1.date, tx1.inserted_at} >= {tx2.date, tx2.inserted_at}
+        case Date.compare(tx1.date, tx2.date) do
+          :gt -> true
+          :lt -> false
+          :eq ->
+            case DateTime.compare(tx1.inserted_at, tx2.inserted_at) do
+              :gt -> true
+              :lt -> false
+              :eq -> tx1.id > tx2.id
+            end
+        end
       end)
       |> Enum.take(5)
 
@@ -141,7 +152,16 @@ defmodule PfmPhoenixWeb.DashboardLive.Index do
     updated_transactions =
       transactions
       |> Enum.sort(fn tx1, tx2 ->
-        {tx1.date, tx1.inserted_at} >= {tx2.date, tx2.inserted_at}
+        case Date.compare(tx1.date, tx2.date) do
+          :gt -> true
+          :lt -> false
+          :eq ->
+            case DateTime.compare(tx1.inserted_at, tx2.inserted_at) do
+              :gt -> true
+              :lt -> false
+              :eq -> tx1.id > tx2.id
+            end
+        end
       end)
       |> Enum.take(5)
 

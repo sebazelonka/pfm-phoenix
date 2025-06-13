@@ -1,7 +1,6 @@
-defmodule PfmPhoenixWeb.TransactionLive.Show do
+defmodule PfmPhoenixWeb.CreditCardLive.Show do
   use PfmPhoenixWeb, :live_view
 
-  alias PfmPhoenix.Transactions
   alias PfmPhoenix.Finance
 
   on_mount {PfmPhoenixWeb.UserAuth, :ensure_authenticated}
@@ -16,10 +15,9 @@ defmodule PfmPhoenixWeb.TransactionLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:transaction, Transactions.get_transaction!(id))
-     |> assign(:budgets, Finance.list_budgets(socket.assigns.current_user))}
+     |> assign(:credit_card, Finance.get_credit_card!(id))}
   end
 
-  defp page_title(:show), do: "Show Transaction"
-  defp page_title(:edit), do: "Edit Transaction"
+  defp page_title(:show), do: "Show Credit card"
+  defp page_title(:edit), do: "Edit Credit card"
 end

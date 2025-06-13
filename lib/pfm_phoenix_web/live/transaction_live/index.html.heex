@@ -1,3 +1,4 @@
+<div id="transactions-container" phx-hook="TransactionFilters">
 <.header>
   Listing Transactions
   <:actions>
@@ -6,6 +7,78 @@
     </.link>
   </:actions>
 </.header>
+
+<div class="bg-white shadow-md rounded-lg p-6 my-6">
+  <h3 class="text-lg font-medium mb-4">Filters</h3>
+  <.form for={%{}} id="filter-form" phx-submit="apply_filters" phx-change="apply_filters">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div>
+        <.input
+          type="date"
+          field={{:filters, :start_date}}
+          name="filters[start_date]"
+          label="Start Date"
+          value={@filters.start_date && Date.to_iso8601(@filters.start_date)}
+        />
+      </div>
+      <div>
+        <.input
+          type="date"
+          field={{:filters, :end_date}}
+          name="filters[end_date]"
+          label="End Date"
+          value={@filters.end_date && Date.to_iso8601(@filters.end_date)}
+        />
+      </div>
+      <div>
+        <.input
+          type="select"
+          field={{:filters, :type}}
+          name="filters[type]"
+          label="Type"
+          prompt="All Types"
+          options={Enum.map(@transaction_types, &{String.capitalize(to_string(&1)), to_string(&1)})}
+          value={@filters.type}
+        />
+      </div>
+      <div>
+        <.input
+          type="select"
+          field={{:filters, :category}}
+          name="filters[category]"
+          label="Category"
+          prompt="All Categories"
+          options={Enum.map(@categories, fn cat -> {String.capitalize(to_string(cat)), to_string(cat)} end)}
+          value={@filters.category}
+        />
+      </div>
+      <div>
+        <.input
+          type="select"
+          field={{:filters, :sort_by}}
+          name="filters[sort_by]"
+          label="Sort by"
+          options={@sort_options}
+          value={@filters.sort_by}
+        />
+      </div>
+    </div>
+    <div class="mt-4 flex justify-end space-x-2">
+      <.button type="submit" phx-disable-with="Filtering..." class="bg-blue-500 hover:bg-blue-700">
+        Apply Filters
+      </.button>
+      <.button type="button" phx-click="reset_filters" class="bg-gray-300 text-gray-800 hover:bg-gray-400">
+        Reset
+      </.button>
+    </div>
+  </.form>
+</div>
+
+<div class="flex justify-between items-center mb-4">
+  <p class="text-sm text-gray-600">
+    Sorted by: <span class="font-medium"><%= get_sort_label(@filters.sort_by, @sort_options) %></span>
+  </p>
+</div>
 
 <.table id="transactions" rows={@streams.transactions}>
   <:col :let={{_id, transaction}} label="Amount">
@@ -23,7 +96,7 @@
       <% end %>
     </div>
   </:col>
-  <:col :let={{_id, transaction}} label="Description"><%= transaction.description %></:col>
+  <:col :let={{_id, transaction}} label="Description"><%= transaction.description %><%= format_installment_info(transaction) %></:col>
   <:col :let={{_id, transaction}} label="Date"><%= transaction.date %></:col>
   <:col :let={{_id, transaction}} label="Category"><%= transaction.category %></:col>
   <:col :let={{_id, transaction}} label="Type"><%= transaction.type %></:col>
@@ -37,10 +110,7 @@
     </.link>
   </:action>
   <:action :let={{id, transaction}}>
-    <.link
-      phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
+    <.link phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")} data-confirm="Are you sure?">
       <.icon name="hero-trash-solid" class="h-4 w-4" />
     </.link>
   </:action>
@@ -59,7 +129,9 @@
     action={@live_action}
     transaction={@transaction}
     budgets={@budgets}
+    credit_cards={@credit_cards}
     current_user={@current_user}
     patch={~p"/transactions"}
   />
 </.modal>
+</div>

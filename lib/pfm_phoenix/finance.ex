@@ -7,6 +7,7 @@ defmodule PfmPhoenix.Finance do
   alias PfmPhoenix.Repo
 
   alias PfmPhoenix.Finance.Budget
+  alias PfmPhoenix.Finance.CreditCard
 
   @doc """
   Returns the list of budgets.
@@ -105,5 +106,37 @@ defmodule PfmPhoenix.Finance do
   """
   def change_budget(%Budget{} = budget, attrs \\ %{}) do
     Budget.changeset(budget, attrs)
+  end
+
+  # Credit Card functions
+
+  def list_credit_cards(user) do
+    CreditCard
+    |> where(user_id: ^user.id)
+    |> Repo.all()
+  end
+
+  def get_credit_card!(id), do: Repo.get!(CreditCard, id)
+
+  def create_credit_card(attrs \\ %{}, user) do
+    attrs = Map.put(attrs, "user_id", user.id)
+
+    %CreditCard{}
+    |> CreditCard.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_credit_card(%CreditCard{} = credit_card, attrs) do
+    credit_card
+    |> CreditCard.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_credit_card(%CreditCard{} = credit_card) do
+    Repo.delete(credit_card)
+  end
+
+  def change_credit_card(%CreditCard{} = credit_card, attrs \\ %{}) do
+    CreditCard.changeset(credit_card, attrs)
   end
 end

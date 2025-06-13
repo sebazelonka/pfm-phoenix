@@ -23,6 +23,12 @@
           <li>
             <a href={~p"/budgets"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Budgets</a>
           </li>
+          <li>
+            <a href={~p"/credit_cards"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Credit Cards</a>
+          </li>
+          <li>
+            <a href={~p"/forecast"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Forecast</a>
+          </li>
           <%= if @current_user && @current_user.role == :admin do %>
             <li>
               <.link href={~p"/users"} class="flex grow py-1 mb-1 md:py-0 md:mb-0">Users</.link>

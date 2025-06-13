@@ -6,20 +6,30 @@ defmodule PfmPhoenixWeb.Helpers do
   def order_transactions(transactions) do
     transactions
     |> Enum.sort(fn tx1, tx2 ->
-      # First compare by date
-      date_comparison = Date.compare(tx1.date, tx2.date)
-
-      case date_comparison do
+      # Sort by date descending, then by inserted_at descending, then by ID descending
+      case Date.compare(tx1.date, tx2.date) do
+        :gt -> true
+        :lt -> false
         :eq ->
-          # If dates are equal, compare by inserted_at
-          DateTime.compare(tx1.inserted_at, tx2.inserted_at) in [:gt, :eq]
-
-        :gt ->
-          true
-
-        :lt ->
-          false
+          case DateTime.compare(tx1.inserted_at, tx2.inserted_at) do
+            :gt -> true
+            :lt -> false
+            :eq -> tx1.id > tx2.id
+          end
       end
     end)
+  end
+
+  def format_installment_info(transaction) do
+    cond do
+      transaction.installment_number && transaction.installments_count ->
+        if transaction.installment_number == transaction.installments_count do
+          " (last payment)"
+        else
+          " (#{transaction.installment_number}/#{transaction.installments_count})"
+        end
+      true ->
+        ""
+    end
   end
 end

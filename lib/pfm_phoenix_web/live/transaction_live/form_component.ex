@@ -54,6 +54,24 @@ defmodule PfmPhoenixWeb.TransactionLive.FormComponent do
           label="Select budget"
           options={Enum.map(@budgets, &{&1.name, &1.id})}
         />
+
+        <.input
+          field={@form[:credit_card_id]}
+          type="select"
+          label="Credit Card (optional)"
+          options={Enum.map(@credit_cards, &{&1.name, &1.id})}
+          prompt="Select credit card (if applicable)"
+        />
+
+        <.input
+          field={@form[:installments_count]}
+          type="number"
+          label="Number of Installments"
+          placeholder="Leave empty for single payment"
+          min="1"
+          max="24"
+        />
+
         <:actions>
           <.button phx-disable-with="Saving...">Save Transaction</.button>
         </:actions>
@@ -98,7 +116,15 @@ defmodule PfmPhoenixWeb.TransactionLive.FormComponent do
   end
 
   defp save_transaction(socket, :new, transaction_params) do
-    case Transactions.create_transaction(transaction_params, socket.assigns.current_user) do
+    # Use installment creation if installments_count is provided
+    create_function = if Map.get(transaction_params, "installments_count") && 
+                        String.to_integer(Map.get(transaction_params, "installments_count", "1")) > 1 do
+      &Transactions.create_transaction_with_installments/2
+    else
+      &Transactions.create_transaction/2
+    end
+    
+    case create_function.(transaction_params, socket.assigns.current_user) do
       {:ok, transaction} ->
         notify_parent({:saved, transaction})
 
