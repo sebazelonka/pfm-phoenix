@@ -1,0 +1,69 @@
+<.header>
+  Payment Forecast
+  <:subtitle>View upcoming credit card payments and installments by month</:subtitle>
+</.header>
+
+<div class="bg-white shadow-md rounded-lg p-6 my-6">
+  <h3 class="text-lg font-medium mb-4">Filter by Credit Card</h3>
+  <.form for={%{}} id="forecast-filter" phx-change="filter_by_credit_card">
+    <.input
+      type="select"
+      field={{:filter, :credit_card_id}}
+      name="credit_card_id"
+      label="Credit Card"
+      prompt="All Credit Cards"
+      options={Enum.map(@credit_cards, &{&1.name, &1.id})}
+      value={@selected_credit_card_id}
+    />
+  </.form>
+</div>
+
+<div class="grid gap-6">
+  <%= for month <- @selected_months do %>
+    <% month_total = get_month_total(@monthly_forecast, month.year, month.month) %>
+    <% month_transactions = get_month_transactions(@monthly_forecast, month.year, month.month) %>
+    
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-gray-800"><%= month.name %></h3>
+        <div class="text-right">
+          <p class="text-sm text-gray-600">Total Amount</p>
+          <p class={[
+            "text-2xl font-bold",
+            (if Decimal.positive?(month_total), do: "text-red-600", else: "text-gray-400")
+          ]}>
+            <%= format_currency(month_total) %>
+          </p>
+        </div>
+      </div>
+      
+      <%= if Enum.any?(month_transactions) do %>
+        <div class="space-y-3">
+          <%= for transaction <- month_transactions do %>
+            <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
+              <div>
+                <p class="font-medium text-gray-900"><%= transaction.description %></p>
+                <div class="flex items-center space-x-4 text-sm text-gray-600">
+                  <span>Date: <%= transaction.date %></span>
+                  <span>Category: <%= transaction.category %></span>
+                  <%= if transaction.installment_number && transaction.installments_count do %>
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                      Installment <%= transaction.installment_number %>/<%= transaction.installments_count %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-semibold text-red-600"><%= format_currency(transaction.amount) %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8 text-gray-500">
+          <p>No payments scheduled for this month</p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
