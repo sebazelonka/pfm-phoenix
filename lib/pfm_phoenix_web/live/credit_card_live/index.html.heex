@@ -1,0 +1,70 @@
+<.header>
+  Listing Credit cards
+  <:actions>
+    <.link patch={~p"/credit_cards/new"}>
+      <.button>New Credit card</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="credit_cards"
+  rows={@streams.credit_cards}
+  row_click={fn {_id, credit_card} -> JS.navigate(~p"/credit_cards/#{credit_card}") end}
+>
+  <:col :let={{_id, credit_card}} label="Name"><%= credit_card.name %></:col>
+  <:col :let={{_id, credit_card}} label="Limit">
+    <%= if credit_card.limit do %>
+      <%= format_currency(credit_card.limit) %>
+    <% else %>
+      -
+    <% end %>
+  </:col>
+  <:col :let={{_id, credit_card}} label="Interest rate">
+    <%= if credit_card.interest_rate do %>
+      <%= credit_card.interest_rate %>%
+    <% else %>
+      -
+    <% end %>
+  </:col>
+  <:col :let={{_id, credit_card}} label="Closing date">
+    <%= if credit_card.closing_date do %>
+      Day <%= credit_card.closing_date %>
+    <% else %>
+      -
+    <% end %>
+  </:col>
+  <:col :let={{_id, credit_card}} label="Payment due date">
+    <%= if credit_card.payment_due_date do %>
+      Day <%= credit_card.payment_due_date %>
+    <% else %>
+      -
+    <% end %>
+  </:col>
+  <:action :let={{_id, credit_card}}>
+    <div class="sr-only">
+      <.link navigate={~p"/credit_cards/#{credit_card}"}>Show</.link>
+    </div>
+    <.link patch={~p"/credit_cards/#{credit_card}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, credit_card}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: credit_card.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="credit_card-modal" show on_cancel={JS.patch(~p"/credit_cards")}>
+  <.live_component
+    module={PfmPhoenixWeb.CreditCardLive.FormComponent}
+    id={@credit_card.id || :new}
+    title={@page_title}
+    action={@live_action}
+    credit_card={@credit_card}
+    current_user={@current_user}
+    patch={~p"/credit_cards"}
+  />
+</.modal>

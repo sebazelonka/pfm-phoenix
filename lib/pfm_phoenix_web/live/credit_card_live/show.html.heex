@@ -1,0 +1,55 @@
+<.header>
+  Credit card <%= @credit_card.id %>
+  <:subtitle>This is a credit card record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/credit_cards/#{@credit_card}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit credit_card</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @credit_card.name %></:item>
+  <:item title="Limit">
+    <%= if @credit_card.limit do %>
+      <%= format_currency(@credit_card.limit) %>
+    <% else %>
+      Not set
+    <% end %>
+  </:item>
+  <:item title="Interest rate">
+    <%= if @credit_card.interest_rate do %>
+      <%= @credit_card.interest_rate %>%
+    <% else %>
+      Not set
+    <% end %>
+  </:item>
+  <:item title="Closing date">
+    <%= if @credit_card.closing_date do %>
+      Day <%= @credit_card.closing_date %> of each month
+    <% else %>
+      Not set
+    <% end %>
+  </:item>
+  <:item title="Payment due date">
+    <%= if @credit_card.payment_due_date do %>
+      Day <%= @credit_card.payment_due_date %> of each month
+    <% else %>
+      Not set
+    <% end %>
+  </:item>
+</.list>
+
+<.back navigate={~p"/credit_cards"}>Back to credit_cards</.back>
+
+<.modal :if={@live_action == :edit} id="credit_card-modal" show on_cancel={JS.patch(~p"/credit_cards/#{@credit_card}")}>
+  <.live_component
+    module={PfmPhoenixWeb.CreditCardLive.FormComponent}
+    id={@credit_card.id}
+    title={@page_title}
+    action={@live_action}
+    credit_card={@credit_card}
+    current_user={@current_user}
+    patch={~p"/credit_cards/#{@credit_card}"}
+  />
+</.modal>
