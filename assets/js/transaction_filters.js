@@ -1,4 +1,4 @@
-/* Local storage handling for transaction filters */
+/* Local storage handling for transaction filters including sorting */
 
 const initTransactionFilters = () => {
   const liveSocket = window.liveSocket;
