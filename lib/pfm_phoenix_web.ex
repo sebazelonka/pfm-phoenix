@@ -88,6 +88,7 @@ defmodule PfmPhoenixWeb do
       import PfmPhoenixWeb.CoreComponents
       import PfmPhoenixWeb.CustomComponents
       import PfmPhoenixWeb.Gettext
+      import PfmPhoenixWeb.Helpers
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
